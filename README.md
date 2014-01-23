@@ -20,3 +20,7 @@ Wiring on MSP430 LaunchPad to LCD breakout:
 * P1.7:	SCS  (SPI chip select)
 * GND:	GND
 * VCC:	VDD and VDDA	(even though specified 5V, the display works fine at 3V)
+
+This code should also work with the Adafruit SHARP Memory Display Breakout
+http://www.adafruit.com/products/1393
+
