@@ -1,0 +1,115 @@
+Cmp-Mod V01 Created by PcbNew date = 1/26/2014 9:04:11 PM
+
+BeginCmp
+TimeStamp = /52E4B126;
+Reference = C1;
+ValeurCmp = .1 uF;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /52E4B135;
+Reference = C2;
+ValeurCmp = 1 uF;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /52E4B144;
+Reference = C3;
+ValeurCmp = 1 uF;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /52E5E46A;
+Reference = JP1;
+ValeurCmp = JUMPER;
+IdModule  = GS2;
+EndCmp
+
+BeginCmp
+TimeStamp = /52E5E52A;
+Reference = JP2;
+ValeurCmp = JUMPER;
+IdModule  = GS2;
+EndCmp
+
+BeginCmp
+TimeStamp = /52E5E3E4;
+Reference = JP3;
+ValeurCmp = JUMPER;
+IdModule  = GS2;
+EndCmp
+
+BeginCmp
+TimeStamp = /52E5E5C3;
+Reference = JP4;
+ValeurCmp = JUMPER;
+IdModule  = GS2;
+EndCmp
+
+BeginCmp
+TimeStamp = /52E5E577;
+Reference = JP5;
+ValeurCmp = JUMPER;
+IdModule  = GS2;
+EndCmp
+
+BeginCmp
+TimeStamp = /52E5DAF9;
+Reference = JP6;
+ValeurCmp = JUMPER3;
+IdModule  = GS3;
+EndCmp
+
+BeginCmp
+TimeStamp = /52E5E2B1;
+Reference = JP7;
+ValeurCmp = JUMPER3;
+IdModule  = GS3;
+EndCmp
+
+BeginCmp
+TimeStamp = /52E4A1EC;
+Reference = P1;
+ValeurCmp = LaunchPad Left;
+IdModule  = SIL-10-W;
+EndCmp
+
+BeginCmp
+TimeStamp = /52E4A1FB;
+Reference = P2;
+ValeurCmp = LaunchPad Right;
+IdModule  = SIL-10-W;
+EndCmp
+
+BeginCmp
+TimeStamp = /52E4A1A4;
+Reference = P3;
+ValeurCmp = Display Zebra;
+IdModule  = SHARP_Mem_Disp_Zebra;
+EndCmp
+
+BeginCmp
+TimeStamp = /52E4A1B3;
+Reference = P4;
+ValeurCmp = Display FPC;
+IdModule  = Kyocera_FPC_6288_10;
+EndCmp
+
+BeginCmp
+TimeStamp = /52E5D9E2;
+Reference = P5;
+ValeurCmp = LaunchPad Left 2;
+IdModule  = SIL-10-W;
+EndCmp
+
+BeginCmp
+TimeStamp = /52E5D9F6;
+Reference = P6;
+ValeurCmp = LaunchPad Right 2;
+IdModule  = SIL-10-W;
+EndCmp
+
+EndListe

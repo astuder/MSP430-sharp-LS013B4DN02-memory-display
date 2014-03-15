@@ -1,25 +1,25 @@
 //***************************************************************************************
-//  SHARP LS013B4DN02 Memory Display
+//  SHARP LS013B4DN04 Memory Display
 //
-//  Simple library for TI MSP430 LaunchPad to write characters to SHARP LS013B4DN02
+//  Simple library for TI MSP430G2 LaunchPad to write characters to SHARP LS013B4DN04
 //  Memory Display using hardware SPI.
 //
-//  This display is end-of-life. However it's successor LS013B4DN04 has the same pin-out
-//  signals and should work too.
+//  This code also works with the predecessor LS013B4DN02 and should work with any
+//  display of that series with compatible pinouts.
 //
 //  ACLK = n/a, MCLK = SMCLK = default DCO. Note that display specifies 1MHz max for SCLK
 //
-//                MSP430G2231
+//                MSP430G2553
 //             -----------------
 //            |             P1.0|-->LED  (VCOM status display)
 //			  |                 |
-//            |             P1.4|-->DISP (display on/off)
-//			  |                 |
 //            |             P1.5|-->SCLK (SPI clock)
 //			  |                 |
-//            |             P1.6|-->SI   (SPI data)
+//            |             P1.7|-->SI   (SPI data)
 //			  |                 |
-//            |             P1.7|-->SCS  (SPI chip select)
+//            |             P2.0|-->DISP (display on/off)
+//			  |                 |
+//            |             P2.5|-->SCS  (SPI chip select)
 //
 //  Display VDD and VDDA connected to LaunchPad VCC
 //  Display GND connected to LaunchPad GND
@@ -27,19 +27,22 @@
 //  LS013B4DN02 is specified for 5V VDD/VDDA but seems to work well with 3V as provided by
 //  the LaunchPad. LS013B4DN04 specifies VDD/VDDA at 3V.
 //
+//  This code works with the 43oh SHARP Memory LCD BoosterPack
+//  http://forum.43oh.com/topic/4979-sharp-memory-display-booster-pack/
+//
 //  Adrian Studer
-//  November 2012
+//  March 2014
 //***************************************************************************************
 
 #include <msp430.h>				
 
 #include "font.h"
 
-#define _LED	0x01					// LED1 used to verify VCOM state
-#define _DISP	0x10					// Turn display on/off
-#define _SCLK	0x20					// SPI clock
-#define _SDATA	0x40					// SPI data (sent to display)
-#define _SCS	0x80					// SPI chip select
+#define _LED	BIT0					// LED1 used to verify VCOM state
+#define _SCLK	BIT5					// SPI clock
+#define _SDATA	BIT7					// SPI data (sent to display)
+#define _SCS	BIT5					// SPI chip select
+#define _DISP	BIT0					// Turn display on/off
 
 #define MLCD_WR 0x01					// MLCD write line command
 #define MLCD_CM 0x04					// MLCD clear memory command
@@ -75,14 +78,21 @@ int main(void)
 	// configure WDT
 	WDTCTL = WDTPW | WDTHOLD;							// stop watch dog timer
 
-	P1DIR |= _LED | _DISP | _SCLK | _SDATA | _SCS;		// set all pins used to output
-	P1OUT &= ~(_LED | _DISP | _SCLK | _SDATA | _SCS);	// set all outputs low
+	P1DIR |= _LED | _SCLK | _SDATA;						// set all pins used to output
+	P1OUT &= ~(_LED | _SCLK | _SDATA);					// set all outputs low
 
-	// setup USI for SPI
-	USICTL0 = USIPE6 | USIPE5 | USILSB					// enable SDO and SCLK, LSB sent first
-					 | USIMST | USIOE;					// master, enable data output
-	USICTL1 = USICKPH;									// data captured on first edge
-	USICKCTL = USIDIV_1 | USISSEL_2;					// /1 SMCLK (= default ~1MHz), clock low when inactive
+	P1SEL |= _SCLK | _SDATA;							// connect pins to USCI (secondary peripheral)
+	P1SEL2 |= _SCLK | _SDATA;							// connect pins to USCI (secondary peripheral)
+
+	P2DIR |= _DISP | _SCS;								// set all pins used to output
+	P2OUT &= ~(_DISP | _SCS);							// set all outputs low
+
+	// configure UCSI B0 for SPI
+	UCB0CTL1 |= UCSWRST;								// reset USCI B0
+	UCB0CTL0 = UCCKPH | UCMST | UCMODE_0 | UCSYNC;		// read on rising edge, inactive clk low, lsb, 8 bit, master mode, 3 pin SPI, synchronous
+	UCB0BR0 = 8; UCB0BR1 = 0;							// clock scaler = 8, i.e 2 MHz SPI clock
+	UCB0CTL1 = UCSSEL_2;								// clock source SMCLK, clear UCSWRST to enable USCI B0
+	UCB0CTL1 &= ~UCSWRST;								// enable USCI B0
 
 	// setup timer A, to keep time and alternate VCOM at 1Hz
 	timeMSec = 0;										// initialize variables used by "clock"
@@ -96,13 +106,13 @@ int main(void)
 	TACCR0 = 1000;										// trigger every millisecond
 	TACCTL0 |= CCIE;									// timer 0 interrupt enabled
 
-	P1OUT |= _DISP;										// turn  display on
+	P2OUT |= _DISP;										// turn  display on
 
 	// initialize display
-	P1OUT |= _SCS;										// SCS high, ready talking to display
+	P2OUT |= _SCS;										// SCS high, ready talking to display
 	SPIWriteByte(MLCD_CM | VCOM);						// send clear display memory command
 	SPIWriteByte(0);									// send command trailer
-	P1OUT &= ~_SCS;										// SCS lo, finished talking to display
+	P2OUT &= ~_SCS;										// SCS lo, finished talking to display
 
 	// write some text to display to demonstrate options
 	printSharp("HELLO,WORLD?",1,0);
@@ -134,10 +144,10 @@ int main(void)
 		printSharp(TextBuff,72,DISP_HIGH | DISP_WIDE);
 
 		// put display into low-power static mode
-		P1OUT |= _SCS;									// SCS high, ready talking to display
+		P2OUT |= _SCS;									// SCS high, ready talking to display
 		SPIWriteByte(MLCD_SM | VCOM);					// send static mode command
 		SPIWriteByte(0);								// send command trailer
-		P1OUT &= ~_SCS;									// SCS lo, finished talking to display
+		P2OUT &= ~_SCS;									// SCS lo, finished talking to display
 
 		// sleep for a while
 		_BIS_SR(LPM0_bits + GIE);						// enable interrupts and go to sleep
@@ -216,49 +226,47 @@ void printSharp(const char* text, unsigned char line, unsigned char options)
 // input: line	position where line buffer is rendered
 void SPIWriteLine(unsigned char line)
 {
-	P1OUT |= _SCS;										// SCS high, ready talking to display
+	P2OUT |= _SCS;										// SCS high, ready talking to display
 
 	SPIWriteByte(MLCD_WR | VCOM);						// send command to write line(s)
 	SPIWriteByte(line+1);								// send line address
 
-	USICTL0 &= ~USILSB;									// switch SPI to MSB first for proper bitmap orientation
+	UCB0CTL0 |= UCMSB;									// switch SPI to MSB first for proper bitmap orientation
 
 	unsigned char j = 0;
 	while(j < (PIXELS_X/8))								// write pixels / 8 bytes
 	{
-		USISRH = LineBuff[j++];							// store low byte
-		USISRL = LineBuff[j++];							// store high byte
-		USICNT |= USISCLREL | USI16B | USICNT4;			// release SCLK when done, transfer 16 bits
-		while(!(USICTL1 & USIIFG));  					// wait for transfer to complete
-	}
+		UCB0TXBUF = LineBuff[j++];						// transfer byte
+		while (UCB0STAT & UCBUSY);						// wait for transfer to complete
+ 	}
 
-	USICTL0 |= USILSB;									// switch SPI back to LSB first for commands
+	UCB0CTL0 &= ~UCMSB;									// switch SPI back to LSB first for commands
 
 	SPIWriteWord(0);									// send 16 bit to latch buffers and end transfer
-	P1OUT &= ~_SCS;										// SCS low, finished talking to display
+	P2OUT &= ~_SCS;										// SCS low, finished talking to display
 }
 
 // send one byte over SPI, does not handle SCS
 // input: value		byte to be sent
 void SPIWriteByte(unsigned char value)
 {
-	USISRL = value;										// store byte
-	USICNT |= USISCLREL | USICNT3;						// release SCLK when done, transfer 8 bits
-	while(!(USICTL1 & USIIFG));  						// wait for transfer to complete
+	UCB0TXBUF = value;
+	while (UCB0STAT & UCBUSY);
 }
 
 // send one byte over SPI, does not handle SCS
 // input: value		word to be sent
 void SPIWriteWord(unsigned int value)
 {
-	USISRL = value & 0xff;								// store low byte
-	USISRH = value >> 8;								// store high byte
-	USICNT |= USISCLREL | USI16B | USICNT4;				// release SCLK when done, transfer 16 bits
-	while(!(USICTL1 & USIIFG));							// wait for transfer to complete
+	UCB0TXBUF = value & 0xff;
+	while (UCB0STAT & UCBUSY);
+
+	UCB0TXBUF = value >> 8;
+	while (UCB0STAT & UCBUSY);
 }
 
 // interrupt service routine to handle timer A
-#pragma vector=TIMERA0_VECTOR
+#pragma vector=TIMER0_A0_VECTOR
 __interrupt void handleTimerA(void)
 {
 	timeMSec++;											// count milliseconds
@@ -282,3 +290,4 @@ __interrupt void handleTimerA(void)
 		_bic_SR_register_on_exit(LPM0_bits);			// wake up main loop every second
 	}
 }
+
