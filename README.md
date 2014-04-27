@@ -6,7 +6,6 @@ Memory Display using USCI for hardware SPI.
 
 SHARP LS013B4DN04 is a very low power 1.35 inch, 96x96 pixel LCD display. It uses
 less than 15 uW when displaying a static image.
-
 http://www.sharpmemorylcd.com/1-35-inch-memory-lcd.html
 
 This code also works with the predecessor LS013B4DN02 and should work with any
