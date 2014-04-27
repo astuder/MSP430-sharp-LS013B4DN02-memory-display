@@ -24,6 +24,11 @@ Pinout MSP430 -> Display
 * GND:	GND
 * VCC:	VDD and VDDA
 
+After adjusting for different pin-out (DISP,SCS), this code also works with the official SHARP LCD BoosterPack by Texas Instruments. 
+http://www.ti.com/tool/430BOOST-SHARP96
+
 This code should also work with the Adafruit SHARP Memory Display Breakout
 http://www.adafruit.com/products/1393
 
+A library and example for Energia can be found in the Energia subfolder of this project.
+This library should also work with Arduino (untested).
