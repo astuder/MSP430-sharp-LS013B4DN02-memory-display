@@ -59,6 +59,7 @@ void SHARPMemLCDTxt::print(const char* text, char line, char options)
 {
     unsigned long time = millis();
     if (time - m_millis > 500) {
+    	m_millis = time;
         pulse();
     }
 
