@@ -28,7 +28,7 @@ Methods
 - line: Vertical position of text
 - options: Formatting options, combinable by adding them together. DISP_INVERT, DISP_HIGH, DISP_WIDE 
 
-*pulse(force) Manually toggle VCOM (see VCOM section below)
+*pulse(force)* Manually toggle VCOM (see VCOM section below)
 - force: If set to 0 (default) will only toggle VCOM if last call was at least 500ms ago. If set to 1, VCOM will toggled with each call.
 
 Display size
