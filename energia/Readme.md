@@ -5,7 +5,10 @@ Created by Adrian Studer, April 2014.
 Distributed under MIT License, see license.txt for details.
 
 Basic, text-only library for SHARP Memory LCD. Developed with Energia and tested on MSP430G2553 and MSP430F5529 LaunchPads, 
-with 43oh and TI SHARP Memory LCD BoosterPacks. Library should also work with other LaunchPads as well as Arduino.
+with 43oh and TI SHARP Memory LCD BoosterPacks.
+
+While untested, this library should work with other LaunchPads as well as Arduino. It should also work with
+SHARP Memory LCD breakout boards sold by Adafruit, Kuzyatech and others.
 
 Methods
 -------
@@ -34,18 +37,14 @@ Methods
 Display size
 ------------
 
-The library as provided is setup a screen size of 96x96 pixels. This is the dimension of the LCDs on the BoosterPacks and compatible
-with any 1.35" diagonal SHARP Memory LCD (LS013B4DN01, 02 and 04). You can adjust this library to different display sizes by editing
-PIXELS_X and PIXELS_Y in SHARPMemLCDTxt.h.
+The library as provided is setup a screen size of 96x96 pixels. This is the dimension of the LCDs on the BoosterPacks and compatible with any 1.35" diagonal SHARP Memory LCD (LS013B4DN01, 02 and 04). You can adjust this library to different display sizes by editing PIXELS_X and PIXELS_Y in SHARPMemLCDTxt.h.
 
 SPI
 ---
 
-This library uses SPI to communicate with the display. If you want to use a different SPI module than the default, you will need to edit 
-the SPI configuration inside the begin() method.
+This library uses SPI to communicate with the display. If you want to use a different SPI module than the default, you will need to edit the SPI configuration inside the begin() method.
 
-Also note that this library will reconfigure SPI bit order to LSB each time it is called. You may need to adjust other libraries that
-rely on SPI to be compatible with this one.
+Also note that this library will reconfigure SPI bit order to LSB each time it is called. You may need to adjust other libraries that rely on SPI to be compatible with this one.
 
 
 VCOM and LCD polarity inversion
