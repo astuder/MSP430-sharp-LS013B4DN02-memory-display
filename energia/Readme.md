@@ -65,5 +65,4 @@ This library by default uses the software method to toggle VCOM. If your Booster
 the pin connected to EXTCOMM is set as 3rd parameter of the SHARPMemLCDTxt constructor. 
 
 It would be convenient to setup a timer interrupt to toggle VCOM by calling *pulse*. This will work fine in hardware mode. However,
-in software mode this can cause problems if the interrupt occurs while the main program updates the display, or when the underlying
-SPI library uses interrupts.
+in software mode this can cause problems if the SPI library is using interrupts (not an issue with Energia and MSP430 Launchpads).

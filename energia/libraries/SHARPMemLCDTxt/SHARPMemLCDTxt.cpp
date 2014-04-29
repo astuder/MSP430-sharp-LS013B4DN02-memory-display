@@ -11,6 +11,8 @@
 #define CMD_NOP  0x00
 #define CMD_VCOM 0x02
 
+volatile char spi_busy = 0;
+
 SHARPMemLCDTxt::SHARPMemLCDTxt(char pinCS, char pinDISP, char pinVCOM)
     : m_pinCS(pinCS), m_pinDISP(pinDISP), m_pinVCOM(pinVCOM), m_stateVCOM(0)
 {
@@ -52,19 +54,23 @@ void SHARPMemLCDTxt::off()
 
 void SHARPMemLCDTxt::clear()
 {
+    spi_busy = 1;
+
     SPI.setBitOrder(0);			// bit order LSB first
 
     digitalWrite(m_pinCS, HIGH);
     SPI.transfer(CMD_CLR | m_stateVCOM);
     SPI.transfer(0);
     digitalWrite(m_pinCS, LOW);
+
+    spi_busy = 0;
 }
 
 void SHARPMemLCDTxt::print(const char* text, char line, char options)
 {
-    SPI.setBitOrder(0);			// bit order LSB first
-
     pulse(0);
+
+    SPI.setBitOrder(0);			// bit order LSB first
 
     // c = char
     // b = bitmap
@@ -119,9 +125,8 @@ void SHARPMemLCDTxt::print(const char* text, char line, char options)
 void SHARPMemLCDTxt::pulse(int force)
 {
     int update = 1;
-    
-    if (!force)
-    {
+
+    if (!force) {
         unsigned long time = millis();
         if (time - m_millis > 500) {
             m_millis = time;
@@ -137,11 +142,15 @@ void SHARPMemLCDTxt::pulse(int force)
             digitalWrite(m_pinVCOM, LOW);
         } else {
             m_stateVCOM ^= CMD_VCOM;
-            SPI.setBitOrder(0);			// bit order LSB first
-            digitalWrite(m_pinCS, HIGH);
-            SPI.transfer(CMD_NOP | m_stateVCOM);
-            SPI.transfer(0);
-            digitalWrite(m_pinCS, LOW);
+            if (!spi_busy) {
+                spi_busy = 1;
+                SPI.setBitOrder(0);			// bit order LSB first
+                digitalWrite(m_pinCS, HIGH);
+                SPI.transfer(CMD_NOP | m_stateVCOM);
+                SPI.transfer(0);
+                digitalWrite(m_pinCS, LOW);
+                spi_busy = 0;
+            }
         }
     }
 }
@@ -168,6 +177,8 @@ void SHARPMemLCDTxt::writeBuffer(char line)
 {
     if (line > PIXELS_Y) return;         // ignore writing to invalid lines
 
+    spi_busy = 1;
+
     digitalWrite(m_pinCS, HIGH);
 
     SPI.transfer(CMD_WR | m_stateVCOM);  // send command to write line(s)
@@ -187,5 +198,6 @@ void SHARPMemLCDTxt::writeBuffer(char line)
     SPI.setBitOrder(0);                  // switch SPI back to LSB first for commands
 
     digitalWrite(m_pinCS, LOW);
-}
 
+    spi_busy = 0;
+}
