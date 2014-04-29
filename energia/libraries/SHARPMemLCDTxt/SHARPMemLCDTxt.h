@@ -1,3 +1,6 @@
+// Created by Adrian Studer, April 2014.
+// Distributed under MIT License, see license.txt for details.
+
 #ifndef __SHARPMEMLCDTXT_H__
 #define __SHARPMEMLCDTXT_H__
 
@@ -36,7 +39,7 @@ public:
     void on();
     void off();
     void print(const char* text, char line, char options = 0);
-    void pulse();
+    void pulse(int force = 0);
 };
 
 #endif

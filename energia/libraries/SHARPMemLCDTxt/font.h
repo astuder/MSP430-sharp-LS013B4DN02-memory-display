@@ -1,9 +1,5 @@
-/*
- * font.h
- *
- *  Created on: Jul 21, 2012
- *      Author: adrian
- */
+// Created by Adrian Studer, April 2014.
+// Distributed under MIT License, see license.txt for details.
 
 #ifndef FONT_H_
 #define FONT_H_

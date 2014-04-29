@@ -1,3 +1,6 @@
+// Created by Adrian Studer, April 2014.
+// Distributed under MIT License, see license.txt for details.
+
 #include <Arduino.h>
 #include <SPI.h>
 #include "SHARPMemLCDTxt.h"
@@ -49,6 +52,8 @@ void SHARPMemLCDTxt::off()
 
 void SHARPMemLCDTxt::clear()
 {
+    SPI.setBitOrder(0);			// bit order LSB first
+
     digitalWrite(m_pinCS, HIGH);
     SPI.transfer(CMD_CLR | m_stateVCOM);
     SPI.transfer(0);
@@ -57,11 +62,9 @@ void SHARPMemLCDTxt::clear()
 
 void SHARPMemLCDTxt::print(const char* text, char line, char options)
 {
-    unsigned long time = millis();
-    if (time - m_millis > 500) {
-    	m_millis = time;
-        pulse();
-    }
+    SPI.setBitOrder(0);			// bit order LSB first
+
+    pulse(0);
 
     // c = char
     // b = bitmap
@@ -113,18 +116,33 @@ void SHARPMemLCDTxt::print(const char* text, char line, char options)
     }
 }
 
-void SHARPMemLCDTxt::pulse()
+void SHARPMemLCDTxt::pulse(int force)
 {
-    if (m_pinVCOM != 0) {
-        digitalWrite(m_pinVCOM, HIGH);
-        delayMicroseconds(1);
-	digitalWrite(m_pinVCOM, LOW);
-    } else {
-        m_stateVCOM ^= CMD_VCOM;
-        digitalWrite(m_pinCS, HIGH);
-        SPI.transfer(CMD_NOP | m_stateVCOM);
-        SPI.transfer(0);
-        digitalWrite(m_pinCS, LOW);
+    int update = 1;
+    
+    if (!force)
+    {
+        unsigned long time = millis();
+        if (time - m_millis > 500) {
+            m_millis = time;
+        } else {
+            update = 0;
+        }
+    }
+
+    if (update) {
+        if (m_pinVCOM != 0) {
+            digitalWrite(m_pinVCOM, HIGH);
+            delayMicroseconds(1);
+            digitalWrite(m_pinVCOM, LOW);
+        } else {
+            m_stateVCOM ^= CMD_VCOM;
+            SPI.setBitOrder(0);			// bit order LSB first
+            digitalWrite(m_pinCS, HIGH);
+            SPI.transfer(CMD_NOP | m_stateVCOM);
+            SPI.transfer(0);
+            digitalWrite(m_pinCS, LOW);
+        }
     }
 }
 
