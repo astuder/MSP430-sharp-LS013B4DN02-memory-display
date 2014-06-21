@@ -31,11 +31,12 @@ Methods
 - line: Vertical position of text
 - options: Formatting options, combinable by adding them together. DISP_INVERT, DISP_HIGH, DISP_WIDE 
 
-*bitmap(bitmap,width,height,line)* displays bitmap
+*bitmap(bitmap,width,height,line,options)* displays bitmap
 - bitmap: byte array
 - width: width of bitmap in pixels (should be multiple of 8)
 - height: heigth of bitmap in pixels
 - line: vertical position
+- options: Formatting options. DISP_INVERT
 
 *pulse(force)* Manually toggle VCOM (see VCOM section below)
 - force: If set to 0 (default) will only toggle VCOM if last call was at least 500ms ago. If set to 1, VCOM will toggled with each call.

@@ -40,7 +40,7 @@ public:
     void off();
     void print(const char* text, char line, char options = 0);
     void pulse(int force = 0);
-    void bitmap(const char* bitmap, int width, int height, char line);
+    void bitmap(const unsigned char* bitmap, int width, int height, char line, char options = 0);
 };
 
 #endif

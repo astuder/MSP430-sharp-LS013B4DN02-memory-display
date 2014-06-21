@@ -155,17 +155,22 @@ void SHARPMemLCDTxt::pulse(int force)
     }
 }
 
-void SHARPMemLCDTxt::bitmap(const char* bitmap, int width, int height, char line)
+void SHARPMemLCDTxt::bitmap(const unsigned char* bitmap, int width, int height, char line, char options)
 {
     if (!bitmap) return;
 
+    unsigned char b;
     int i = 0;
     int p = 0;
     int x = width/8;
 
     while (height > 0 && line < PIXELS_Y) {
         while (i < PIXELS_X/8 && i < x) {
-            m_buffer[i] = bitmap[p+i];
+            b = bitmap[p+i];
+            if (!(options & DISP_INVERT)) {         // invert bits if DISP_INVERT is _NOT_ selected
+                b = ~b;// pixels are LOW active
+            }
+            m_buffer[i] = b;
             i++;
         }
         writeBuffer(line);
