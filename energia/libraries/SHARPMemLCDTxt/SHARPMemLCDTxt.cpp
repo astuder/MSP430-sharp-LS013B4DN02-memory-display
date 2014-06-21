@@ -155,6 +155,27 @@ void SHARPMemLCDTxt::pulse(int force)
     }
 }
 
+void SHARPMemLCDTxt::bitmap(const char* bitmap, int width, int height, char line)
+{
+    if (!bitmap) return;
+
+    int i = 0;
+    int p = 0;
+    int x = width/8;
+
+    while (height > 0 && line < PIXELS_Y) {
+        while (i < PIXELS_X/8 && i < x) {
+            m_buffer[i] = bitmap[p+i];
+            i++;
+        }
+        writeBuffer(line);
+        p += x;
+        i = 0;
+        height--;
+        line++;
+    }
+}
+
 void SHARPMemLCDTxt::doubleWide(char b, char j)
 {
     int i = 8;

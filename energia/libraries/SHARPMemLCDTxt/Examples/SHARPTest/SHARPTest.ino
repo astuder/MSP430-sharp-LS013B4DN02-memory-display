@@ -1,5 +1,9 @@
+// Created by Adrian Studer, June 2014.
+// Distributed under MIT License, see license.txt for details.
+
 #include <SPI.h>
 #include <SHARPMemLCDTxt.h>
+#include "tilogo.h"
 
 SHARPMemLCDTxt display;       // configured for 43oh BoosterPack
 //SHARPMemLCDTxt display(6,5);  // configured for official TI BoosterPack
@@ -16,6 +20,11 @@ void setup()
   
   display.clear();
   display.on();
+
+  // display TI logo for 2 seconds
+  display.bitmap(pixel_ti_logo, 96, 96, 0);
+  delay(2000);
+  display.clear();
 
   // write static text  
   display.print("HELLO WORLD!", 8);
