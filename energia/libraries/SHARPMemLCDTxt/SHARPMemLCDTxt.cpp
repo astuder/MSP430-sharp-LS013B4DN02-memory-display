@@ -49,7 +49,7 @@ void SHARPMemLCDTxt::on()
 
 void SHARPMemLCDTxt::off()
 {
-    digitalWrite(m_pinDISP, HIGH);
+    digitalWrite(m_pinDISP, LOW);
 }
 
 void SHARPMemLCDTxt::clear()
