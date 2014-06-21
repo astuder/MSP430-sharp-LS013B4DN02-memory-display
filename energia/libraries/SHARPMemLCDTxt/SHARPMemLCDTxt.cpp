@@ -157,6 +157,10 @@ void SHARPMemLCDTxt::pulse(int force)
 
 void SHARPMemLCDTxt::bitmap(const unsigned char* bitmap, int width, int height, char line, char options)
 {
+    pulse(0);
+
+    SPI.setBitOrder(0);			// bit order LSB first
+
     if (!bitmap) return;
 
     unsigned char b;

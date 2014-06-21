@@ -1,10 +1,10 @@
-Text Library for SHARP Memory LCD
-=================================
+Basic Library for SHARP Memory LCD
+==================================
 
-Created by Adrian Studer, April 2014.
+Created by Adrian Studer, June 2014.
 Distributed under MIT License, see license.txt for details.
 
-Basic, text-only library for SHARP Memory LCD. Developed with Energia and tested on MSP430G2553 and MSP430F5529 LaunchPads, 
+Basic library for SHARP Memory LCD. Developed with Energia and tested on MSP430G2553 and MSP430F5529 LaunchPads, 
 with 43oh and TI SHARP Memory LCD BoosterPacks.
 
 While untested, this library should work with other LaunchPads as well as Arduino. It should also work with
@@ -31,7 +31,7 @@ Methods
 - line: Vertical position of text
 - options: Formatting options, combinable by adding them together. DISP_INVERT, DISP_HIGH, DISP_WIDE 
 
-*bitmap(bitmap,width,height,line,options)* displays bitmap
+*bitmap(bitmap,width,height,line,options)* Displays bitmap
 - bitmap: byte array
 - width: width of bitmap in pixels (should be multiple of 8)
 - height: heigth of bitmap in pixels
@@ -44,7 +44,7 @@ Methods
 Display size
 ------------
 
-The library as provided is setup a screen size of 96x96 pixels. This is the dimension of the LCDs on the BoosterPacks and compatible with any 1.35" diagonal SHARP Memory LCD (LS013B4DN01, 02 and 04). You can adjust this library to different display sizes by editing PIXELS_X and PIXELS_Y in SHARPMemLCDTxt.h.
+The library as provided is for a screen size of 96x96 pixels. This is the dimension of the LCDs on the BoosterPacks and compatible with any 1.35" diagonal SHARP Memory LCD (LS013B4DN01, 02 and 04). You can adjust this library to different display sizes by editing PIXELS_X and PIXELS_Y in SHARPMemLCDTxt.h.
 
 SPI
 ---
@@ -60,7 +60,7 @@ VCOM and LCD polarity inversion
 SHARP Memory LCDs require an alternating signal VCOM to avoid DC bias buildup. DC bias over time may cause stuck pixels.
 The frequency of this singal varies by LCD model, but is typically specified as 0.5-30 Hz.
 
-The *print* method of this library automatically alternates polarity approximately twice per second.
+The *print* and *bitmap* methods of this library automatically alternates polarity approximately twice per second.
 If your program updates the display only less often, it is recommended to call *pulse* yourself at least once a second.
 
 SHARP Memory LCDs have two ways to provide the VCOM signal. One is by software with a special command, the other in hardware by
