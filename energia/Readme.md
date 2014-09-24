@@ -4,8 +4,9 @@ Basic Library for SHARP Memory LCD
 Created by Adrian Studer, June 2014.
 Distributed under MIT License, see license.txt for details.
 
-Basic library for SHARP Memory LCD. Developed with Energia and tested on MSP430G2553 and MSP430F5529 LaunchPads, 
-with 43oh and TI SHARP Memory LCD BoosterPacks.
+Basic library for SHARP Memory LCD. Developed with Energia and tested on MSP430G2553, MSP430F5529, Tiva TM4C123
+and CC3200 LaunchPads with 43oh and TI SHARP Memory LCD BoosterPacks. To run on Tiva and CC3200, Energia
+0101E0013 or newer is required.
 
 While untested, this library should work with other LaunchPads as well as Arduino. It should also work with
 SHARP Memory LCD breakout boards sold by Adafruit, Kuzyatech and others.
