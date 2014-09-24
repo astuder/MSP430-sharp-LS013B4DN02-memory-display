@@ -61,8 +61,8 @@ VCOM and LCD polarity inversion
 SHARP Memory LCDs require an alternating signal VCOM to avoid DC bias buildup. DC bias over time may cause stuck pixels.
 The frequency of this singal varies by LCD model, but is typically specified as 0.5-30 Hz.
 
-The *print* and *bitmap* methods of this library automatically alternates polarity approximately twice per second.
-If your program updates the display only less often, it is recommended to call *pulse* yourself at least once a second.
+The *print* and *bitmap* methods of this library automatically alternate polarity approximately twice per second.
+If your program updates the display less often, it is recommended to call *pulse* yourself at least once a second.
 
 SHARP Memory LCDs have two ways to provide the VCOM signal. One is by software with a special command, the other in hardware by
 wiggling the EXTCOMM pin. The method to use is determined by the state of the EXTMODE pin. By default EXTMODE is set to software 
